@@ -1,23 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
-
+// import InputSample from "./components/input";
+import { useRef, useState } from "react";
+import UserList from "./components/UserList";
+import CreateUser from "./components/CreateUser";
 function App() {
+  const [input, setInput] = useState({
+    username: "",
+    email: "",
+  });
+  const { username, email } = input;
+  const onChange = (event) => {
+    const { name, value } = event.target;
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };
+
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: "velopert",
+      email: "public.velopert@gmail.com",
+      active: true,
+    },
+    {
+      id: 2,
+      username: "tester",
+      email: "tester@example.com",
+      active: false,
+    },
+    {
+      id: 3,
+      username: "liz",
+      email: "liz@example.com",
+      active: false,
+    },
+  ]);
+  const nextID = useRef(4);
+  const onCreate = () => {
+    const user = {
+      id: nextID.current,
+      username,
+      email,
+    };
+    setUsers([...users, user]);
+    setInput({
+      username: "",
+      email: "",
+    });
+    nextID.current += 1;
+  };
+
+  const onRemove = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  const onToggle = (id) => {
+    setUsers(users.map((user) => (user.id === id ? { ...user, active: !user.active } : user)));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
+      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
     </div>
   );
 }
