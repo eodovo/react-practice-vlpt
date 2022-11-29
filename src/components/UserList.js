@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 function User({ user, onRemove, onToggle }) {
+  useEffect(() => {
+    console.log("user가 설정됨");
+    console.log(user);
+    return () => {
+      console.log("user가 사라짐");
+      console.log(user);
+    };
+  }, [user]);
   return (
     <div>
       <b
